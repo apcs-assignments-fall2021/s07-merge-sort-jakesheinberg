@@ -55,10 +55,9 @@ public class MyMain {
         int[] output= new int[end-begin];
         int index=begin;
         int i=0;
-        while(index<end){
-            output[i] = arr[index];
+        for (int j = begin; j < end; j++) {
+            output[i] = arr[j];
             i++;
-            index++;
         }
         return output;
     }
@@ -77,11 +76,14 @@ public class MyMain {
     // Examples:
     // mergeSort([6, 3, 4, 1, 5, 8, 7, 2]) => [1, 2, 3, 4, 5, 6, 7, 8]
     public static int[] mergeSort(int[] arr) {
-        if(arr.length<=1){
+        if(arr.length==1){
             return arr;
         }
-       int [] arr1 =subArray(arr, 0, arr.length/2);
+       int [] arr1 = subArray(arr, 0, arr.length/2);
        int [] arr2 = subArray(arr, arr.length/2, arr.length);
+
+       arr1=mergeSort(arr1);
+       arr2=mergeSort(arr2);
 
        return merge(arr1, arr2);
     }
@@ -117,20 +119,23 @@ public class MyMain {
     }
 
     // Tail recursive method
+
     public static ArrayList<Integer> insertTR(ArrayList<Integer> list, int x, int i) {
-        if(i == list.size()){
+        // Base case
+        if (i == list.size()) {
             list.add(x);
             return list;
         }
-        else if(list.get(i) >= x){
+        else if (i == 0 && list.get(i) > x) {
+            list.add(0, x);
+            return list;
+        }
+        else if (i > 0 && list.get(i - 1) < x && x < list.get(i)) {
             list.add(i, x);
             return list;
         }
-
-        else{
-
-            return insertTR(list, x, i + 1);
-        }
+        // Recursive call
+        else return insertTR(list, x, i + 1);
     }
 
 
@@ -152,13 +157,13 @@ public class MyMain {
     // Examples:
     /// insertionSort([6, 3, 4, 1, 5, 8, 7, 2]) => [1, 2, 3, 4, 5, 6, 7, 8]
     public static ArrayList<Integer> insertionSort(ArrayList<Integer> list) {
-            if (list.size()==1){
-                return list;
-            }
-            else{
-                int last = list.get(list.size()-1);
-                list.remove(list.size()-1);
-                return insert(insertionSort(list),last);
-            }
+        // Base case
+        if (list.size() == 1) {
+            return list;
         }
+        // Recursive call
+        int temp = list.get(list.size() - 1);
+        list.remove(list.size() - 1);
+        return insert(insertionSort(list), temp);
     }
+}
